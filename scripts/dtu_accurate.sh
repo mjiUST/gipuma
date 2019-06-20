@@ -1,10 +1,18 @@
 #!
+function img_list {
+PYTHON_ARG="$1" python - <<END
+import os
+for i in range(1,50, int(os.environ['PYTHON_ARG'])):
+    print "rect_{:03d}_3_r5000.png".format(i)
+END
+}
 prog="./gipuma"
 warping="../fusibile/fusibile"
 #inputdir="/home/gsilvano/data/DTURobotImageDataSets/SampleSet1/scan1/resize50/"
-inputdir="data/dtu/SampleSet/MVS Data/Rectified/scan${1}/"
-batch_name="dtu_accurate_${1}"
-output_dir_basename="results/$batch_name"
+inputdir="/home/mengqi/temp/svr2/fileserver/mengqi/datasets/DTU_MVS/Rectified/scan${1}/"
+sparsity=${2}
+batch_name="dtu_accurate_${1}_every"$sparsity"views"
+output_dir_basename="/home/mengqi/fileserver/results/MVS/gipuma_20190620/$batch_name/"
 p_folder="data/dtu/calib/"
 scale=1
 blocksize=25
@@ -14,8 +22,8 @@ cost_comb="best_n"
 n_best=3
 depth_max=800
 depth_min=300
-image_list_array=`( cd "$inputdir" && ls *_3_*) `
-output_dir=${output_dir_basename}/$i/
+image_list_array=$(img_list $sparsity) # `( cd "$inputdir" && ls *_3_*) ` # {001..049..3}
+output_dir=${output_dir_basename}  #/$i/
 min_angle=10
 max_angle=30
 
